@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      UIView初识 | 程序羊的小巫 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="吴洋">
+    
+    
+
+    <meta name="description" content="UIView，也即User Interface View，就是用户界面的意思。毫无疑问，这是与用户关系最密切的一层，也是产品狗们真正关心的地方，所以，对UIView的掌握在很大程度上决定着一个程序猴的“工作能力”。之前也在网络上看到过许多UIView的中文讲解，个人感觉比较零散，在这里，我希望通过自己的努力和学习，将其进行一下更好的汇总。
+UIView简介
+The UIView class def">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UIView初识 | 程序羊的小巫">
+<meta property="og:url" content="http://yoursite.com/2016/03/02/UIView初识/index.html">
+<meta property="og:site_name" content="程序羊的小巫">
+<meta property="og:description" content="UIView，也即User Interface View，就是用户界面的意思。毫无疑问，这是与用户关系最密切的一层，也是产品狗们真正关心的地方，所以，对UIView的掌握在很大程度上决定着一个程序猴的“工作能力”。之前也在网络上看到过许多UIView的中文讲解，个人感觉比较零散，在这里，我希望通过自己的努力和学习，将其进行一下更好的汇总。
+UIView简介
+The UIView class def">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/Cocoa%E5%B1%82%E6%AC%A1.png">
+<meta property="og:image" content="http://images.cnitblog.com/blog/278623/201310/23100605-b2017f2235fa47a0b012d889f5659836.jpg">
+<meta property="og:updated_time" content="2016-03-02T10:43:46.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UIView初识 | 程序羊的小巫">
+<meta name="twitter:description" content="UIView，也即User Interface View，就是用户界面的意思。毫无疑问，这是与用户关系最密切的一层，也是产品狗们真正关心的地方，所以，对UIView的掌握在很大程度上决定着一个程序猴的“工作能力”。之前也在网络上看到过许多UIView的中文讲解，个人感觉比较零散，在这里，我希望通过自己的努力和学习，将其进行一下更好的汇总。
+UIView简介
+The UIView class def">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css" type="text/css">
+    <link rel="stylesheet" href="/css/highlight.css" type="text/css">
+    <link rel="stylesheet" href="/css/archive.css" type="text/css">
+    <link rel="stylesheet" href="/css/china-social-icon.css" type="text/css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">程序羊的小巫</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">UIView初识</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-03-02" class="post-meta__date date">2016-03-02</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <hr>
+<p>UIView，也即User Interface View，就是用户界面的意思。毫无疑问，这是与用户关系最密切的一层，也是产品狗们真正关心的地方，所以，对UIView的掌握在很大程度上决定着一个程序猴的“工作能力”。之前也在网络上看到过许多UIView的中文讲解，个人感觉比较零散，在这里，我希望通过自己的努力和学习，将其进行一下更好的汇总。</p>
+<h2 id="UIView_u7B80_u4ECB"><a href="#UIView_u7B80_u4ECB" class="headerlink" title="UIView简介"></a>UIView简介</h2><blockquote>
+<p>The UIView class defines a rectangular area on the screen and the interfaces for managing the content in that area. At runtime, a view object handles the rendering of any content in its area and also handles any interactions with that content. The UIView class itself provides basic behavior for filling its rectangular area with a background color. More sophisticated content can be presented by subclassing UIView and implementing the necessary drawing and event-handling code yourself. The UIKit framework also includes a set of standard subclasses that range from simple buttons to complex tables and can be used as-is. For example, a UILabel object draws a text string and a UIImageView object draws an image.</p>
+</blockquote>
+<p>UIView类在屏幕上定义了一个矩形的区域和对这片区域的内容进行管理的接口。从运行时的角度来看，即使用一个对象view来控制这片区域里面内容的渲染和交互的事件。UIView类提供了比较简单的填充区域的方法，比如设置background color。当然，我们也可以通过子类化UIView来提供更复杂的页面渲染和事件处理方法。UIKit框架也提供了一些标准的UIView的子类，从简单的button到复杂的tableview都有定义。</p>
+<h2 id="UIView_u804C_u80FD"><a href="#UIView_u804C_u80FD" class="headerlink" title="UIView职能"></a>UIView职能</h2><p>可以这么说，UIView类是一个应用与用户进行交互的最重要的方式，这促成了UIView的多种职能。当然，在本文，不展开介绍每个职能，后面我会专门写三篇或者更多文章来对这几个方面的内容进行介绍。</p>
+<h4 id="1-__u9875_u9762_u586B_u5145_u548C_u52A8_u753B"><a href="#1-__u9875_u9762_u586B_u5145_u548C_u52A8_u753B" class="headerlink" title="1. 页面填充和动画"></a>1. 页面填充和动画</h4><ul>
+<li>一个view对象通过使用UIKit，Core Graphics或者OpenGL ES来对页面进行填充。</li>
+<li>可以通过改变UIView类的一些属性的值来制作动画。</li>
+</ul>
+<h4 id="2-__u5E03_u5C40_u548C_u7BA1_u7406_u5B50_u89C6_u56FE"><a href="#2-__u5E03_u5C40_u548C_u7BA1_u7406_u5B50_u89C6_u56FE" class="headerlink" title="2. 布局和管理子视图"></a>2. 布局和管理子视图</h4><ul>
+<li>view可以包含任意数量的子视图。 </li>
+<li>view可以对自身的默认大小进行设定。</li>
+<li>view可以设定其子视图的大小和位置。</li>
+</ul>
+<h4 id="3-__u4E8B_u4EF6_u5904_u7406"><a href="#3-__u4E8B_u4EF6_u5904_u7406" class="headerlink" title="3. 事件处理"></a>3. 事件处理</h4><ul>
+<li>每一个view都是响应者，它可以处理UIResponder定义的所有事件。</li>
+<li>view可以使用addGestureRecognizer:方法来添加手势响应者来处理一般的手势。</li>
+</ul>
+<h2 id="u4ECE_u5C42_u6B21_u7684_u89D2_u5EA6_u6765_u770BUIView"><a href="#u4ECE_u5C42_u6B21_u7684_u89D2_u5EA6_u6765_u770BUIView" class="headerlink" title="从层次的角度来看UIView"></a>从层次的角度来看UIView</h2><p>这里，本文决定以从下到上的方式来分析其模块层次，并以从上到下的方式来分析其对象层次。</p>
+<h4 id="1-__u6A21_u5757_u5C42_u6B21"><a href="#1-__u6A21_u5757_u5C42_u6B21" class="headerlink" title="1. 模块层次"></a>1. 模块层次</h4><p><img src="http://7xrfe1.com1.z0.glb.clouddn.com/Cocoa%E5%B1%82%E6%AC%A1.png" alt="view-layer"><br>首先，理清几个常见概念，分别是：Cocoa，Foundation和UIKit。Cocoa不是一种编程语言（它可以运行多种编程语言），它也不是一个开发工具，它是创建iOS程序的原生面向对象API，为这iOS应用提供了编程环境，上图中Foundation和UIKit也是Cocoa提供的框架。当然，也可以轻松看出，Foundation和UIKit分别是Core Service层和Cocoa Touch的主要框架。那么，UIView存在在哪里呢？对，存在于UIKit框架提供的UI系的类里面，属于Cocoa Touch层。<br>接下来，从下层到上层，依次看一下Cocoa的几个层次。</p>
+<ul>
+<li>Core OS是位于iOS系统架构最下面的一层是核心操作系统层，它包括内存管理、文件系统、电源管理以及一些其他的操作系统任务。它可以直接和硬件设备进行交互。作为app开发者不需要与这一层打交道，所以不进行过多的介绍（其实多的我也不清楚）。</li>
+<li>Core Services是核心服务层，可以通过它来访问iOS的一些服务。这些服务的关键就是Foundation内核和Foundation框架，它们共同定义了所有app使用的最基本的类型，来为上层开发作基础。其中包含例如：网络，位置等服务。</li>
+<li>Media层提供了图形、音频和视频的处理的基础。图形方面包含Core Animation、OpenGL等，音频方面包含AV Foundation、OpenAL等，视频方面包含AV Foundation、AVKit、UIImagePickerController等。</li>
+<li>Cocoa Touch层包含构建iOS应用的主要框架。这些框架定义了你的应用程序的表现层。他们还提供了应用程序的基础设施和关键的技术机制，如多任务处理机制，触摸式输入机制，推送通知机制等许多高层次的系统服务。当然，这也是作为程序猴的我们最关心的一层。主要框架包含：UIKit、MapKit、EventKit等。</li>
+<li>Application层就不做过多的讲解了。</li>
+</ul>
+<h4 id="2-__u7EE7_u627F_u5C42_u6B21"><a href="#2-__u7EE7_u627F_u5C42_u6B21" class="headerlink" title="2. 继承层次"></a>2. 继承层次</h4><p><img src="http://images.cnitblog.com/blog/278623/201310/23100605-b2017f2235fa47a0b012d889f5659836.jpg" alt="viewobject-layer"><br>上面的关系图从对象的继承层面写出了UIKit的框架层次，其实这个图并不完整。因为NSObject是iOS中所有类的基类，所以单纯的从NSObject指向UIKit框架的类不太准确。就拿Foundation框架来说，它也是基于NSObject的。因此，我们把上图所幸称之为NSObject的UI系类，Foundation框架下的类则称之为NS系。<br>在UI系的继承层次中可以看出，UIView继承自UIResponder，这也赋予它的事件处理能力。而看到UIView的子类，包括UIWindow、UILabel、UIAlertView、UIWebView等等，也终于看到了我们开发中最常用也最亲切的东西，本章的内容也到此为止。</p>
+<hr>
+<p>本文大体对UIView的职能和地位做了一定的介绍，接下来的几篇关于UIView的文章将在三个职能、Cycle Memthod和Override Method几个方面进行展开。期望本文能对您有所帮助，更期望您的宝贵意见。</p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
