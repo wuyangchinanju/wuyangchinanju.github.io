@@ -28,7 +28,7 @@ UIView简介
 The UIView class def">
 <meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/Cocoa%E5%B1%82%E6%AC%A1.png">
 <meta property="og:image" content="http://images.cnitblog.com/blog/278623/201310/23100605-b2017f2235fa47a0b012d889f5659836.jpg">
-<meta property="og:updated_time" content="2016-03-02T10:43:46.000Z">
+<meta property="og:updated_time" content="2016-03-02T11:28:55.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="UIView初识 | 程序羊的小巫">
 <meta name="twitter:description" content="UIView，也即User Interface View，就是用户界面的意思。毫无疑问，这是与用户关系最密切的一层，也是产品狗们真正关心的地方，所以，对UIView的掌握在很大程度上决定着一个程序猴的“工作能力”。之前也在网络上看到过许多UIView的中文讲解，个人感觉比较零散，在这里，我希望通过自己的努力和学习，将其进行一下更好的汇总。
@@ -207,7 +207,7 @@ classes that you can use:
 <li>Cocoa Touch层包含构建iOS应用的主要框架。这些框架定义了你的应用程序的表现层。他们还提供了应用程序的基础设施和关键的技术机制，如多任务处理机制，触摸式输入机制，推送通知机制等许多高层次的系统服务。当然，这也是作为程序猴的我们最关心的一层。主要框架包含：UIKit、MapKit、EventKit等。</li>
 <li>Application层就不做过多的讲解了。</li>
 </ul>
-<h4 id="2-__u7EE7_u627F_u5C42_u6B21"><a href="#2-__u7EE7_u627F_u5C42_u6B21" class="headerlink" title="2. 继承层次"></a>2. 继承层次</h4><p><img src="http://images.cnitblog.com/blog/278623/201310/23100605-b2017f2235fa47a0b012d889f5659836.jpg" alt="viewobject-layer"><br>上面的关系图从对象的继承层面写出了UIKit的框架层次，其实这个图并不完整。因为NSObject是iOS中所有类的基类，所以单纯的从NSObject指向UIKit框架的类不太准确。就拿Foundation框架来说，它也是基于NSObject的。因此，我们把上图所幸称之为NSObject的UI系类，Foundation框架下的类则称之为NS系。<br>在UI系的继承层次中可以看出，UIView继承自UIResponder，这也赋予它的事件处理能力。而看到UIView的子类，包括UIWindow、UILabel、UIAlertView、UIWebView等等，也终于看到了我们开发中最常用也最亲切的东西，本章的内容也到此为止。</p>
+<h4 id="2-__u7EE7_u627F_u5C42_u6B21"><a href="#2-__u7EE7_u627F_u5C42_u6B21" class="headerlink" title="2. 继承层次"></a>2. 继承层次</h4><p><img src="http://images.cnitblog.com/blog/278623/201310/23100605-b2017f2235fa47a0b012d889f5659836.jpg" alt="viewobject-layer"><br>上面的关系图从对象的继承层面写出了UIKit的框架层次，其实这个图并不完整。因为NSObject是iOS中所有类的基类，所以单纯的从NSObject指向UIKit框架的类不太准确。就拿Foundation框架来说，它也是基于NSObject的。因此，我们把上图所幸称之为NSObject的UI系类，Foundation框架下的类则称之为NS系。<br>在UI系的继承层次中可以看出，UIView继承自UIResponder，这也赋予了它事件处理能力。而看到UIView的子类，包括UIWindow、UILabel、UIAlertView、UIWebView等等，终于看到了我们开发中最常用也最亲切的东西，本章的内容也到此为止。</p>
 <hr>
 <p>本文大体对UIView的职能和地位做了一定的介绍，接下来的几篇关于UIView的文章将在三个职能、Cycle Memthod和Override Method几个方面进行展开。期望本文能对您有所帮助，更期望您的宝贵意见。</p>
 
