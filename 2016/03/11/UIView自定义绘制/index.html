@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      UIView自定义绘制 | 程序羊的小巫 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="吴洋">
+    
+    
+
+    <meta name="description" content="许多UIView的子类，如UIButton或UILabel，它们的形状都是系统固定的。但是，对于一些特殊的情况，我们需要绘制产品狗想要的图形。那么等待我们的只有两个选择：第一，可以使用UIImageView类显示一个静态的图形（建议，但是low）；第二，通过代码动态地绘制一个图形（不建议，但是某些情况需要使用）。绘图并不难，UIKit提供了一些简单的方法，但是，完整的API是由Core Graph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="UIView自定义绘制 | 程序羊的小巫">
+<meta property="og:url" content="http://yoursite.com/2016/03/11/UIView自定义绘制/index.html">
+<meta property="og:site_name" content="程序羊的小巫">
+<meta property="og:description" content="许多UIView的子类，如UIButton或UILabel，它们的形状都是系统固定的。但是，对于一些特殊的情况，我们需要绘制产品狗想要的图形。那么等待我们的只有两个选择：第一，可以使用UIImageView类显示一个静态的图形（建议，但是low）；第二，通过代码动态地绘制一个图形（不建议，但是某些情况需要使用）。绘图并不难，UIKit提供了一些简单的方法，但是，完整的API是由Core Graph">
+<meta property="og:updated_time" content="2016-04-01T06:23:01.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="UIView自定义绘制 | 程序羊的小巫">
+<meta name="twitter:description" content="许多UIView的子类，如UIButton或UILabel，它们的形状都是系统固定的。但是，对于一些特殊的情况，我们需要绘制产品狗想要的图形。那么等待我们的只有两个选择：第一，可以使用UIImageView类显示一个静态的图形（建议，但是low）；第二，通过代码动态地绘制一个图形（不建议，但是某些情况需要使用）。绘图并不难，UIKit提供了一些简单的方法，但是，完整的API是由Core Graph">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css" type="text/css">
+    <link rel="stylesheet" href="/css/highlight.css" type="text/css">
+    <link rel="stylesheet" href="/css/archive.css" type="text/css">
+    <link rel="stylesheet" href="/css/china-social-icon.css" type="text/css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">程序羊的小巫</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">UIView自定义绘制</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-03-11" class="post-meta__date date">2016-03-11</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <hr>
+<p>许多UIView的子类，如UIButton或UILabel，它们的形状都是系统固定的。但是，对于一些特殊的情况，我们需要绘制产品狗想要的图形。那么等待我们的只有两个选择：第一，可以使用UIImageView类显示一个静态的图形（建议，但是low）；第二，通过代码动态地绘制一个图形（不建议，但是某些情况需要使用）。<br>绘图并不难，UIKit提供了一些简单的方法，但是，完整的API是由Core Graphics提供，也称之为Quartz 2D。本文的内容也是围绕Quartz 2D的简单使用展开（由浅到深）：</p>
+<ul>
+<li>Core Graphics简介。 </li>
+<li>UIImage的简单处理。</li>
+<li>drawRect与圆角定制简单篇。</li>
+<li>UIBezierPath与圆角定制进阶篇。</li>
+</ul>
+<h2 id="Core_Graphics_u7B80_u4ECB"><a href="#Core_Graphics_u7B80_u4ECB" class="headerlink" title="Core Graphics简介"></a>Core Graphics简介</h2><blockquote>
+<p>Quartz 2D is an advanced, two-dimensional drawing engine available for iOS application development and to all Mac OS X application environments outside of the kernel. Quartz 2D provides low-level, lightweight 2D rendering with unmatched output fidelity regardless of display or printing device. Quartz 2D is resolution- and device-independent; you don’t need to think about the final destination when you use the Quartz 2D application programming interface (API) for drawing.The Quartz 2D API is easy to use and provides access to powerful features such as transparency layers, path-based drawing, offscreen rendering, advanced color management, anti-aliased rendering, and PDF document creation, display, and parsing.The Quartz 2D API is part of the Core Graphics framework, so you may see Quartz referred to as Core Graphics or, simply, CG.</p>
+</blockquote>
+<p>Quartz 2D是一种先进的二维绘画引擎，它可以用来进行iOS应用开发，并且在Mac OS X系统下也适用于内核外的开发。Quartz 2D提供了层次低，重量轻的二维渲染方式，并且在输出或打印设备上有无与伦比的输出保真度。Quartz 2D的分辨率是与设备无关的，因此你不需要在你适用Quartz 2D的API的考虑太多设备的事情。Quartz 2D API易于使用，并且提供了一些强大的功能，如透明层，基于路径的绘制，离屏渲染，先进的色彩管理机制，抗锯齿渲染，和PDF文档的创建、显示、和解析。Quartz 2D API是Core Graphics框架的一部分，所以你可以看到Quartz 2D被称为Core Graphics或CG。</p>
+<h2 id="UIImage_u7684_u7B80_u5355_u5904_u7406"><a href="#UIImage_u7684_u7B80_u5355_u5904_u7406" class="headerlink" title="UIImage的简单处理"></a>UIImage的简单处理</h2><p><code>&lt;blockquote&gt;</code></p>
+<ul>
+<li>(UIImage <em>)saveToImage<br>{<br>UIImage </em>image = [UIImage imageNamed:@”nvdi”];</li>
+</ul>
+<p>CGSize size = [image size];</p>
+<p>UIGraphicsBeginImageContext(CGSizeMake(size.width, size.height * 2));</p>
+<p>[image drawAtPoint:CGPointMake(0, 0)];</p>
+<p>[image drawAtPoint:CGPointMake(0, size.height)];</p>
+<p>UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();</p>
+<p>return resultImage;<br>}<br><code>&lt;blockquote&gt;</code></p>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
