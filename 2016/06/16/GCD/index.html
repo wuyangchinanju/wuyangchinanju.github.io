@@ -33,7 +33,7 @@ Although threads have been around for ma">
 <meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-b2.jpg">
 <meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/NoRoundView.jpg">
 <meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/RoundView.jpg">
-<meta property="og:updated_time" content="2016-06-16T08:41:58.000Z">
+<meta property="og:updated_time" content="2016-06-16T08:43:43.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD | 程序羊的小巫">
 <meta name="twitter:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
@@ -227,7 +227,7 @@ classes that you can use:
 </tr>
 </tbody>
 </table>
-<p>｜类型｜描述｜<br>｜—–｜:—-:｜ —-:｜<br>｜串行队列｜串行队列将任务以先进先出(FIFO)的顺序来执行，所以串行队列经常用来做访问某些特定资源的同步处理。你可以也根据需要创建多个队列，而这些队列相对其他队列都是并发执行的。换句话说，如果你创建了4个串行队列，每一个队列在同一时间都只执行一个任务，对这四个任务来说，他们是相互独立且并发执行的。如果需要创建串行队列，一般用dispatch_queue_create这个方法来实现。｜<br>｜并行队列｜    并发队列虽然是能同时执行多个任务，但这些任务仍然是按照先到先执行(FIFO)的顺序来执行的。并发队列会基于系统负载来合适地选择并发执行这些任务。在iOS5之前，并发队列一般指的就是全局队列(Global queue)，进程中存在四个全局队列：高、中(默认)、低、后台四个优先级队列，可以调用dispatch_get_global_queue函数传入优先级来访问队列。而在iOS5之后，我们也可以用dispatch_queue_create，并指定队列类型DISPATCH_QUEUE_CONCURRENT，来自己创建一个并发队列。｜<br>｜主队列｜与主线程功能相同。实际上，提交至main queue的任务会在主线程中执行。main queue可以调用dispatch_get_main_queue()来获得。因为main queue是与主线程相关的，所以这是一个串行队列。和其它串行队列一样，这个队列中的任务一次只能执行一个。它能保证所有的任务都在主线程执行，而主线程是唯一可用于更新 UI 的线程。｜</p>
+<p>类型｜描述<br>—–｜—–<br>串行队列｜串行队列将任务以先进先出(FIFO)的顺序来执行，所以串行队列经常用来做访问某些特定资源的同步处理。你可以也根据需要创建多个队列，而这些队列相对其他队列都是并发执行的。换句话说，如果你创建了4个串行队列，每一个队列在同一时间都只执行一个任务，对这四个任务来说，他们是相互独立且并发执行的。如果需要创建串行队列，一般用dispatch_queue_create这个方法来实现。<br>并行队列｜并发队列虽然是能同时执行多个任务，但这些任务仍然是按照先到先执行(FIFO)的顺序来执行的。并发队列会基于系统负载来合适地选择并发执行这些任务。在iOS5之前，并发队列一般指的就是全局队列(Global queue)，进程中存在四个全局队列：高、中(默认)、低、后台四个优先级队列，可以调用dispatch_get_global_queue函数传入优先级来访问队列。而在iOS5之后，我们也可以用dispatch_queue_create，并指定队列类型DISPATCH_QUEUE_CONCURRENT，来自己创建一个并发队列。<br>主队列｜与主线程功能相同。实际上，提交至main queue的任务会在主线程中执行。main queue可以调用dispatch_get_main_queue()来获得。因为main queue是与主线程相关的，所以这是一个串行队列。和其它串行队列一样，这个队列中的任务一次只能执行一个。它能保证所有的任务都在主线程执行，而主线程是唯一可用于更新 UI 的线程。</p>
 <p><strong>原图：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a1.jpg" alt="view-nvdi"><br><strong>处理后：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a2.jpg" alt="view-nvdiresult1"><br><strong>代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)saveToImage&#10;&#123;&#10;    UIImage *image = [UIImage imageNamed:@&#34;nvdi&#34;];&#10;    CGSize size = [image size];&#10;    UIGraphicsBeginImageContext(CGSizeMake(size.width, size.height * 2));&#10;    [image drawAtPoint:CGPointMake(0, 0)];&#10;    [image drawAtPoint:CGPointMake(0, size.height)];&#10;    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();&#10;    UIGraphicEndImageContext();&#10;    return resultImage;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
 <p><strong>讲解：</strong><br>由两张图片的对比，可以发现代码的作用是把一个女帝的图片转成两个女帝的图片。那么，代码是如何作用的呢？由上述代码可见，代码主要运用了两个方面的内容：</p>
 <ul>
