@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    
+
+    <title>
+      GCD | 程序羊的小巫 
+    </title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+      <meta name="author" content="吴洋">
+    
+    
+
+    <meta name="description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
+一、多线程背景
+Although threads have been around for ma">
+<meta property="og:type" content="article">
+<meta property="og:title" content="GCD | 程序羊的小巫">
+<meta property="og:url" content="http://yoursite.com/2016/06/16/GCD/index.html">
+<meta property="og:site_name" content="程序羊的小巫">
+<meta property="og:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
+一、多线程背景
+Although threads have been around for ma">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a1.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a2.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a1.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-b1.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-b2.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/NoRoundView.jpg">
+<meta property="og:image" content="http://7xrfe1.com1.z0.glb.clouddn.com/RoundView.jpg">
+<meta property="og:updated_time" content="2016-06-16T08:33:27.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="GCD | 程序羊的小巫">
+<meta name="twitter:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
+一、多线程背景
+Although threads have been around for ma">
+    
+    
+    
+      <link rel="icon" type="image/x-icon" href="/favicon.png">
+    
+    <link rel="stylesheet" href="/css/uno.css" type="text/css">
+    <link rel="stylesheet" href="/css/highlight.css" type="text/css">
+    <link rel="stylesheet" href="/css/archive.css" type="text/css">
+    <link rel="stylesheet" href="/css/china-social-icon.css" type="text/css">
+
+</head>
+<body>
+
+    <span class="mobile btn-mobile-menu">
+        <i class="icon icon-list btn-mobile-menu__icon"></i>
+        <i class="icon icon-x-circle btn-mobile-close__icon hidden"></i>
+    </span>
+
+    
+
+<header class="panel-cover panel-cover--collapsed">
+
+
+  <div class="panel-main">
+
+  
+    <div class="panel-main__inner panel-inverted">
+    <div class="panel-main__content">
+
+        
+
+        <h1 class="panel-cover__title panel-title"><a href="/" title="link to homepage">程序羊的小巫</a></h1>
+        <hr class="panel-cover__divider" />
+
+        
+
+        <div class="navigation-wrapper">
+
+          <nav class="cover-navigation cover-navigation--primary">
+            <ul class="navigation">
+
+              
+                
+                <li class="navigation__item"><a href="/#blog" title="" class="blog-button">首页</a></li>
+              
+                
+                <li class="navigation__item"><a href="/about" title="" class="">关于</a></li>
+              
+                
+                <li class="navigation__item"><a href="/archive" title="" class="">归档</a></li>
+              
+
+            </ul>
+          </nav>
+
+          <!-- ----------------------------
+To add a new social icon simply duplicate one of the list items from below
+and change the class in the <i> tag to match the desired social network
+and then add your link to the <a>. Here is a full list of social network
+classes that you can use:
+
+    icon-social-500px
+    icon-social-behance
+    icon-social-delicious
+    icon-social-designer-news
+    icon-social-deviant-art
+    icon-social-digg
+    icon-social-dribbble
+    icon-social-facebook
+    icon-social-flickr
+    icon-social-forrst
+    icon-social-foursquare
+    icon-social-github
+    icon-social-google-plus
+    icon-social-hi5
+    icon-social-instagram
+    icon-social-lastfm
+    icon-social-linkedin
+    icon-social-medium
+    icon-social-myspace
+    icon-social-path
+    icon-social-pinterest
+    icon-social-rdio
+    icon-social-reddit
+    icon-social-skype
+    icon-social-spotify
+    icon-social-stack-overflow
+    icon-social-steam
+    icon-social-stumbleupon
+    icon-social-treehouse
+    icon-social-tumblr
+    icon-social-twitter
+    icon-social-vimeo
+    icon-social-xbox
+    icon-social-yelp
+    icon-social-youtube
+    icon-social-zerply
+    icon-mail
+
+-------------------------------->
+
+<!-- add social info here -->
+
+
+
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="panel-cover--overlay"></div>
+  </div>
+</header>
+
+    <div class="content-wrapper">
+        <div class="content-wrapper__inner entry">
+            
+
+<article class="post-container post-container--single">
+
+  <header class="post-header">
+    
+    <h1 class="post-title">GCD</h1>
+
+    
+
+    <div class="post-meta">
+      <time datetime="2016-06-16" class="post-meta__date date">2016-06-16</time> 
+
+      <span class="post-meta__tags tags">
+
+          
+
+          
+
+      </span>
+    </div>
+    
+    
+
+  </header>
+
+  <section id="post-content" class="article-content post">
+    <hr>
+<p>谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。</p>
+<h2 id="u4E00_u3001_u591A_u7EBF_u7A0B_u80CC_u666F"><a href="#u4E00_u3001_u591A_u7EBF_u7A0B_u80CC_u666F" class="headerlink" title="一、多线程背景"></a>一、多线程背景</h2><blockquote>
+<p>Although threads have been around for many years and continue to have their uses, they do not solve the general problem of executing multiple tasks in a scalable way. With threads, the burden of creating a scalable solution rests squarely on the shoulders of you, the developer. You have to decide how many threads to create and adjust that number dynamically as system conditions change. Another problem is that your application assumes most of the costs associated with creating and maintaining any threads it uses.</p>
+</blockquote>
+<p>上述大致说出了直接操纵线程实现多线程的弊端：</p>
+<ul>
+<li>开发人员必须根据系统的变化动态调整线程的数量和状态，即对开发者的负担重。</li>
+<li>应用程序会在创建和维护线程上消耗很多成本，即效率低。</li>
+</ul>
+<p>相对的，GCD是一套低层级的C API，通过 GCD，开发者只需要向队列中添加一段代码块(block或C函数指针)，而不需要直接和线程打交道。GCD在后端管理着一个线程池，它不仅决定着你的代码块将在哪个线程被执行，还根据可用的系统资源对这些线程进行管理。GCD的工作方式，使其拥有很多优点（快、稳、准）：</p>
+<ul>
+<li>快，更快的内存效率，因为线程栈不暂存于应用内存。</li>
+<li>稳，提供了自动的和全面的线程池管理机制，稳定而便捷。</li>
+<li>准，提供了直接并且简单的调用接口，使用方便，准确。</li>
+</ul>
+<h2 id="u4E8C_u3001_u961F_u5217_u548C_u4EFB_u52A1"><a href="#u4E8C_u3001_u961F_u5217_u548C_u4EFB_u52A1" class="headerlink" title="二、队列和任务"></a>二、队列和任务</h2><p>初学GCD的时候，肯定会纠结一些看似很关键但却毫无意义的问题。比如：GCD和线程到底什么关系；异步任务到底在哪个线程工作；队列到底是个什么东西；mian queue和main thread到底搞什么名堂等等。现在，这些我们直接略过（最后拾遗中会谈一下），苹果既然推荐使用GCD，那么为什么还要纠结于线程呢？需要关注的只有两个概念：队列、任务。</p>
+<h4 id="1-__u961F_u5217"><a href="#1-__u961F_u5217" class="headerlink" title="1. 队列"></a>1. 队列</h4><p>调度队列是一个对象，它会以first-in、first-out的方式管理您提交的任务。GCD有三种队列类型：<br>｜类型｜描述｜<br>｜串行队列｜串行队列将任务以先进先出(FIFO)的顺序来执行，所以串行队列经常用来做访问某些特定资源的同步处理。你可以也根据需要创建多个队列，而这些队列相对其他队列都是并发执行的。换句话说，如果你创建了4个串行队列，每一个队列在同一时间都只执行一个任务，对这四个任务来说，他们是相互独立且并发执行的。如果需要创建串行队列，一般用dispatch_queue_create这个方法来实现。｜<br>｜并行队列｜    并发队列虽然是能同时执行多个任务，但这些任务仍然是按照先到先执行(FIFO)的顺序来执行的。并发队列会基于系统负载来合适地选择并发执行这些任务。在iOS5之前，并发队列一般指的就是全局队列(Global queue)，进程中存在四个全局队列：高、中(默认)、低、后台四个优先级队列，可以调用dispatch_get_global_queue函数传入优先级来访问队列。而在iOS5之后，我们也可以用dispatch_queue_create，并指定队列类型DISPATCH_QUEUE_CONCURRENT，来自己创建一个并发队列。｜<br>｜主队列｜与主线程功能相同。实际上，提交至main queue的任务会在主线程中执行。main queue可以调用dispatch_get_main_queue()来获得。因为main queue是与主线程相关的，所以这是一个串行队列。和其它串行队列一样，这个队列中的任务一次只能执行一个。它能保证所有的任务都在主线程执行，而主线程是唯一可用于更新 UI 的线程。｜</p>
+<p><strong>原图：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a1.jpg" alt="view-nvdi"><br><strong>处理后：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a2.jpg" alt="view-nvdiresult1"><br><strong>代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)saveToImage&#10;&#123;&#10;    UIImage *image = [UIImage imageNamed:@&#34;nvdi&#34;];&#10;    CGSize size = [image size];&#10;    UIGraphicsBeginImageContext(CGSizeMake(size.width, size.height * 2));&#10;    [image drawAtPoint:CGPointMake(0, 0)];&#10;    [image drawAtPoint:CGPointMake(0, size.height)];&#10;    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();&#10;    UIGraphicEndImageContext();&#10;    return resultImage;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>讲解：</strong><br>由两张图片的对比，可以发现代码的作用是把一个女帝的图片转成两个女帝的图片。那么，代码是如何作用的呢？由上述代码可见，代码主要运用了两个方面的内容：</p>
+<ul>
+<li>UIGraphicsBeginImageContext等UIGraphics系列方法<br> UIGraphicsBeginImageContext用于指定新的image的size并开始对上下文的编辑；<br> UIGraphicsGetImageFromCurrentImageContext用于获取当前上下文中的image；<br> UIGraphicEndImageContext用于结束对上下文的编辑；</li>
+<li>drawAtPoint等UIImage的实例方法<br> drawAtPoint用于在某个点做为起始点放置一张图片;<br> drawInRect用于在一个矩形区域里面放置一张图片;</li>
+</ul>
+<h4 id="2-__u901A_u8FC7CGImage_u548C_u56FE_u5F62_u4E0A_u4E0B_u6587_uFF08_u5B9E_u73B0_u56FE_u50CF_u7684_u5207_u5272_u548C_u5408_u6210_uFF09"><a href="#2-__u901A_u8FC7CGImage_u548C_u56FE_u5F62_u4E0A_u4E0B_u6587_uFF08_u5B9E_u73B0_u56FE_u50CF_u7684_u5207_u5272_u548C_u5408_u6210_uFF09" class="headerlink" title="2. 通过CGImage和图形上下文（实现图像的切割和合成）"></a>2. 通过CGImage和图形上下文（实现图像的切割和合成）</h4><p><strong>原图：</strong>（CG层图片最好使用png格式，jpg转换成CGImage后与原图大小不同）<br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-a1.jpg" alt="view-nvdi"><br><strong>处理后：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-b1.jpg" alt="view-nvdiresult3"><br><strong>代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (UIImage *)cgSaveToImage&#10;&#123;&#10;    UIImage *image = [UIImage imageNamed:@&#34;nvdi.png&#34;];&#10;    CGSize size = [image size];&#10;    CGImageRef imageLeft = CGImageCreateWithImageInRect([image CGImage], CGRectMake(0, 0, size.width/2, size.height));&#10;    CGImageRef imageRight = CGImageCreateWithImageInRect([image CGImage], CGRectMake(size.width/2, 0, size.width/2, size.height));&#10;    UIGraphicsBeginImageContext(CGSizeMake(size.width*1.5, size.height));&#10;    CGContextRef context = UIGraphicsGetCurrentContext();&#10;    CGContextDrawImage(context, CGRectMake(0, 0, size.width/2, size.height), imageLeft);&#10;    CGContextDrawImage(context, CGRectMake(size.width, 0, size.width/2, size.height), imageRight);&#10;    UIImage *resultImage = UIGraphicsGetImageFromCurrentImageContext();&#10;    UIGraphicsEndImageContext();&#10;    return resultImage;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>问题：</strong><br>由于Core Graphics上的操作依据的坐标系是mac系统版本的，而非iOS，所以造成CGImageRef出现翻过来的情形。这里我们可以通过进一步的处理解决这个问题（比如，用Core Graphics的CGContextDrawImage方法再画一次）。<br><strong>代码调整：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">static inline CGImageRef flip (CGImageRef im)&#10;&#123;&#10;    CGSize size = CGSizeMake(CGImageGetWidth(im), CGImageGetHeight(im));&#10;    UIGraphicsBeginImageContext(size);&#10;    CGContextDrawImage(UIGraphicsGetCurrentContext(), CGRectMake(0, 0, size.width, size.height), im);&#10;    CGImageRef result = [UIGraphicsGetImageFromCurrentImageContext() CGImage];&#10;    UIGraphicsEndImageContext();&#10;    return result;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CGContextDrawImage(context, CGRectMake(0, 0, size.width/2, size.height), flip(imageLeft));&#10;CGContextDrawImage(context, CGRectMake(size.width, 0, size.width/2, size.height), flip(imageRight));</span><br></pre></td></tr></table></figure>
+<p><strong>调整后图片：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/nvdi-b2.jpg" alt="view-nvdiresult4"><br><strong>结论：</strong><br>无论是通过UIImage的实例方法，还是通过Core Graphics的C方法，均可以实现图片的处理。相比较而言，CG方式更为灵活，但是也会有一些需要注意的问题，比如图像的翻转问题和图片的格式问题。</p>
+<h2 id="u4E09_u3001drawRect_Core_Graphics_u4E0E_u5706_u89D2_u5B9A_u5236"><a href="#u4E09_u3001drawRect_Core_Graphics_u4E0E_u5706_u89D2_u5B9A_u5236" class="headerlink" title="三、drawRect Core Graphics与圆角定制"></a>三、drawRect Core Graphics与圆角定制</h2><p>首先，为什么要使用drawRect绘制圆角，因为对于某些场景，比如UIImageView需要有圆角。当然我们运用layer层的两个属性cornerRadius和maskToBounds也可以实现。但是maskToBounds会触发离屏渲染（iOS9以前），因此我们可以使用drawRect＋CoreGraphics来绘制圆角（其实这也是离屏渲染，但是是CPU完成图像处理，所以速度快）。当然，使用drawRect也有其缺点，即会触发view的重绘，其损耗甚至可能大于离屏渲染，此问题本文最后会总结。(<a href="https://github.com/wuyangchinanju/DrawRectDemo.git" target="_blank" rel="external">DrawRectDemo</a>)<br><strong>未加圆角图：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/NoRoundView.jpg" alt="view-noroundview"><br><strong>加圆角图：</strong><br><img src="http://7xrfe1.com1.z0.glb.clouddn.com/RoundView.jpg" alt="view-roundview"><br><strong>代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)drawRect:(CGRect)rect&#10;&#123;&#10;    CGFloat width = rect.size.width;&#10;    CGFloat height = rect.size.height;&#10;    // &#31616;&#20415;&#36215;&#35265;&#65292;&#36825;&#37324;&#25226;&#22278;&#35282;&#21322;&#24452;&#35774;&#32622;&#20026;&#38271;&#21644;&#23485;&#24179;&#22343;&#20540;&#30340;1/10&#10;    CGFloat radius = (width + height) * 0.05;&#10;    // &#33719;&#21462;CGContext&#65292;&#27880;&#24847;UIKit&#37324;&#29992;&#30340;&#26159;&#19968;&#20010;&#19987;&#38376;&#30340;&#20989;&#25968;&#10;    CGContextRef context = UIGraphicsGetCurrentContext();&#10;    // &#31227;&#21160;&#21040;&#21021;&#22987;&#28857;&#10;    CGContextMoveToPoint(context, radius, 0);&#10;    // &#32472;&#21046;&#31532;1&#26465;&#32447;&#21644;&#31532;1&#20010;1/4&#22278;&#24359;&#10;    CGContextAddLineToPoint(context, width - radius, 0);&#10;    CGContextAddArc(context, width - radius, radius, radius, -0.5 * M_PI, 0.0, 0);&#10;    // &#32472;&#21046;&#31532;2&#26465;&#32447;&#21644;&#31532;2&#20010;1/4&#22278;&#24359;&#10;    CGContextAddLineToPoint(context, width, height - radius);&#10;    CGContextAddArc(context, width - radius, height - radius, radius, 0.0, 0.5 * M_PI, 0);&#10;    // &#32472;&#21046;&#31532;3&#26465;&#32447;&#21644;&#31532;3&#20010;1/4&#22278;&#24359;&#10;    CGContextAddLineToPoint(context, radius, height);&#10;    CGContextAddArc(context, radius, height - radius, radius, 0.5 * M_PI, M_PI, 0);&#10;    // &#32472;&#21046;&#31532;4&#26465;&#32447;&#21644;&#31532;4&#20010;1/4&#22278;&#24359;&#10;    CGContextAddLineToPoint(context, 0, radius);&#10;    CGContextAddArc(context, radius, radius, radius, M_PI, 1.5 * M_PI, 0);&#10;    // &#38381;&#21512;&#36335;&#24452;&#10;    CGContextClosePath(context);&#10;    CGContextSetLineWidth(context, 1);&#10;    CGContextSetStrokeColorWithColor(context, [UIColor blackColor].CGColor);&#10;    // &#22635;&#20805;&#21322;&#36879;&#26126;&#31881;&#32418;&#33394;&#10;    CGContextSetRGBFillColor(context, 100.0, 0.0, 0.0, 0.5);&#10;    CGContextDrawPath(context, kCGPathFill|kCGPathFillStroke);&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>拾遗：</strong><br>代码的解释就不赘述了，见注释。这里说一下setNeedsDisplay与drawRect的关系：</p>
+<ul>
+<li>setNeedsDisplay会标记一次重绘，会在下一次loop的时候触发view重绘，触发drawRect。当然可以简单的理解为setNeedsDisplay会触发drawRect。</li>
+<li>那么什么时候需要setNeedsDisplay去触发drawRect呢？可以类比tableView，需要使用reloadData等函数刷新界面，这也类似，如果drawRect中的操作与数据源相关，并且数据源发生改变，则需要setNeedsDisplay调用drawRect重新绘制。</li>
+</ul>
+<h2 id="u56DB_u3001drawRect_UIBezierPath_u4E0E_u5706_u89D2_u5B9A_u5236"><a href="#u56DB_u3001drawRect_UIBezierPath_u4E0E_u5706_u89D2_u5B9A_u5236" class="headerlink" title="四、drawRect UIBezierPath与圆角定制"></a>四、drawRect UIBezierPath与圆角定制</h2><p>UIBezierPath类是基于Core Graphics的，准确的说是基于CGPath的。其对CG的进一步封装，使得我们可以在某些场景更方便的使用drawRect，比如绘制圆角。<br><strong>代码：</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">- (void)drawRect:(CGRect)rect&#10;&#123;&#10;    CGFloat width = rect.size.width;&#10;    CGFloat height = rect.size.height;&#10;    // &#31616;&#20415;&#36215;&#35265;&#65292;&#36825;&#37324;&#25226;&#22278;&#35282;&#21322;&#24452;&#35774;&#32622;&#20026;&#38271;&#21644;&#23485;&#24179;&#22343;&#20540;&#30340;1/10&#10;    CGFloat radius = (width + height) * 0.05;&#10;    UIBezierPath *p = [UIBezierPath bezierPathWithRoundedRect:rect cornerRadius:radius];&#10;    [p stroke];&#10;&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>拓展：</strong><br>上述的代码可以实现类似三中描边的效果，而且非常方便。当然，我们可也已通过UIBezierPath的一些实例方法进行各种其他图形的绘制，比如通过addLineToPoint来绘制一条线。</p>
+<h2 id="u603B_u7ED3_uFF1A"><a href="#u603B_u7ED3_uFF1A" class="headerlink" title="总结："></a>总结：</h2><p><strong>1、圆角绘制：</strong></p>
+<ul>
+<li>对于一般的view（非UIImageView），仅仅通过cornerRadius设置即可，不需要maskToBounds，因为cornerRadius可以控制view的背景色。（无边框，通过背景色区分）</li>
+<li>对于某些需要绘制边框的需求，我们可以通过上述三、四两种方式绘制边框。</li>
+<li>对于UIImageView，目前推荐大家尝试使用ZYCornerRadius或者HJCornerRadius（两种方式应该都是采用裁剪图片的方式，类似一中所述），当然也不用过于在乎，因为iOS9以后我们不需要再考虑离屏渲染造成的问题。</li>
+</ul>
+<p><strong>2、drawRect应用场景：</strong></p>
+<ul>
+<li>对于某些需要绘制边框的需求，我们可以通过上述三、四两种方式绘制边框。</li>
+<li>对于某些非矩形，并且使用系统不提供的样式显示的，我们需要drawRect进行自绘。</li>
+</ul>
+
+  </section>
+
+  
+  
+</article>
+
+
+            <footer class="footer">
+
+    <span class="footer__copyright">&copy; 2014-2015. | 由<a href="https://hexo.io/">Hexo</a>强力驱动 | 主题<a href="https://github.com/someus/huno">Huno</a></span>
+    
+</footer>
+        </div>
+    </div>
+
+    <!-- js files -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/main.js"></script>
+    <script src="/js/scale.fix.js"></script>
+    
+
+    
+
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript"> 
+        $(document).ready(function(){
+            MathJax.Hub.Config({ 
+                tex2jax: {inlineMath: [['[latex]','[/latex]'], ['\\(','\\)']]} 
+            });
+        });
+    </script>
+
+
+    
+
+    <script src="/js/awesome-toc.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $.awesome_toc({
+                overlay: true,
+                contentId: "post-content",
+            });
+        });
+    </script>
+
+
+    
+    
+    <!--kill ie6 -->
+<!--[if IE 6]>
+  <script src="//letskillie6.googlecode.com/svn/trunk/2/zh_CN.js"></script>
+<![endif]-->
+
+</body>
+</html>
