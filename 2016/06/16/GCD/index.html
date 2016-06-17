@@ -26,7 +26,7 @@ Although threads have been around for ma">
 <meta property="og:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
 一、多线程背景
 Although threads have been around for ma">
-<meta property="og:updated_time" content="2016-06-16T10:55:11.000Z">
+<meta property="og:updated_time" content="2016-06-17T09:06:06.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD | 程序羊的小巫">
 <meta name="twitter:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
@@ -205,7 +205,44 @@ classes that you can use:
 <li>同步任务，使用dispatch_sync将任务加入队列。将同步任务加入串行队列，会顺序执行，一般不这样做并且在一个任务未结束时调起其它同步任务会死锁。将同步任务加入并行队列，会顺序执行，但是也没什么意义。</li>
 <li>异步任务，使用dispatch_async将任务加入队列。将异步任务加入串行队列，会顺序执行，并且不会出现死锁问题。将异步任务加入并行队列，会并行执行多个任务，这也是我们最常用的一种方式。</li>
 </ul>
-<h4 id="3-__u7B80_u5355_u5E94_u7528"><a href="#3-__u7B80_u5355_u5E94_u7528" class="headerlink" title="3. 简单应用"></a>3. 简单应用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#38431;&#21015;&#30340;&#21019;&#24314;&#65292;queue1:&#20013;&#65288;&#40664;&#35748;&#65289;&#20248;&#20808;&#32423;&#30340;&#20840;&#23616;&#24182;&#34892;&#38431;&#21015;&#12289;queue2:&#20027;&#38431;&#21015;&#12289;queue3:&#26410;&#25351;&#23450;type&#21017;&#20026;&#20018;&#34892;&#38431;&#21015;&#12289;queue4:&#25351;&#23450;&#20018;&#34892;&#38431;&#21015;&#12289;queue5:&#25351;&#23450;&#24182;&#34892;&#38431;&#21015;&#10;dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);&#10;dispatch_queue_t queue2 = dispatch_get_main_queue();&#10;dispatch_queue_t queue3 = dispatch_queue_create(&#34;queue3&#34;, NULL);&#10;dispatch_queue_t queue4 = dispatch_queue_create(&#34;queue4&#34;, DISPATCH_QUEUE_SERIAL);&#10;dispatch_queue_t queue5 = dispatch_queue_create(&#34;queue5&#34;, DISPATCH_QUEUE_CONCURRENT);&#10;&#10;// &#38431;&#21015;&#20013;&#28155;&#21152;&#24322;&#27493;&#20219;&#21153;&#10;dispatch_async(queue1, ^&#123;&#10;// &#20219;&#21153;&#10;...&#10;&#125;);&#10;&#10;&#10;// &#38431;&#21015;&#20013;&#28155;&#21152;&#21516;&#27493;&#20219;&#21153;&#10;dispatch_sync(queue1, ^&#123;&#10;// &#20219;&#21153;&#10;...&#10;&#125;);</span><br></pre></td></tr></table></figure>
+<h4 id="3-__u7B80_u5355_u5E94_u7528"><a href="#3-__u7B80_u5355_u5E94_u7528" class="headerlink" title="3. 简单应用"></a>3. 简单应用</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#38431;&#21015;&#30340;&#21019;&#24314;&#65292;queue1:&#20013;&#65288;&#40664;&#35748;&#65289;&#20248;&#20808;&#32423;&#30340;&#20840;&#23616;&#24182;&#34892;&#38431;&#21015;&#12289;queue2:&#20027;&#38431;&#21015;&#12289;queue3:&#26410;&#25351;&#23450;type&#21017;&#20026;&#20018;&#34892;&#38431;&#21015;&#12289;queue4:&#25351;&#23450;&#20018;&#34892;&#38431;&#21015;&#12289;queue5:&#25351;&#23450;&#24182;&#34892;&#38431;&#21015;&#10;dispatch_queue_t queue1 = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);&#10;dispatch_queue_t queue2 = dispatch_get_main_queue();&#10;dispatch_queue_t queue3 = dispatch_queue_create(&#34;queue3&#34;, NULL);&#10;dispatch_queue_t queue4 = dispatch_queue_create(&#34;queue4&#34;, DISPATCH_QUEUE_SERIAL);&#10;dispatch_queue_t queue5 = dispatch_queue_create(&#34;queue5&#34;, DISPATCH_QUEUE_CONCURRENT);&#10;&#10;// &#38431;&#21015;&#20013;&#28155;&#21152;&#24322;&#27493;&#20219;&#21153;&#10;dispatch_async(queue1, ^&#123;&#10;// &#20219;&#21153;&#10;...&#10;&#125;);&#10;&#10;// &#38431;&#21015;&#20013;&#28155;&#21152;&#21516;&#27493;&#20219;&#21153;&#10;dispatch_sync(queue1, ^&#123;&#10;// &#20219;&#21153;&#10;...&#10;&#125;);</span><br></pre></td></tr></table></figure>
+<h2 id="u4E09_u3001GCD_u5E38_u89C1_u7528_u6CD5_u548C_u5E94_u7528_u573A_u666F"><a href="#u4E09_u3001GCD_u5E38_u89C1_u7528_u6CD5_u548C_u5E94_u7528_u573A_u666F" class="headerlink" title="三、GCD常见用法和应用场景"></a>三、GCD常见用法和应用场景</h2><p>非常喜欢一句话：Talk is cheap, show me the code.接下来对GCD的使用，我会通过代码展示。</p>
+<h4 id="1-_dispatch_async"><a href="#1-_dispatch_async" class="headerlink" title="1. dispatch_async"></a>1. dispatch_async</h4><p><strong>一般用法</strong><br>｀｀｀<br>dispatch_queue_t globalQueue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);<br>dispatch_async(globalQueue, ^{<br>    // 一个异步的任务，例如网络请求，耗时的文件操作等等<br>    …<br>    dispatch_async(dispatch_get_main_queue(), ^{<br>        // UI刷新<br>        …<br>    });<br>});<br>｀｀｀<br><strong>应用场景</strong><br>这种用法非常常见，比如开启一个异步的网络请求，待数据返回后返回主队列刷新UI；又比如请求图片，待图片返回刷新UI等等。</p>
+<h4 id="2-_dispatch_after"><a href="#2-_dispatch_after" class="headerlink" title="2. dispatch_after"></a>2. dispatch_after</h4><p><strong>一般用法</strong><br>｀｀｀<br>dispatch_queue_t queue= dispatch_get_main_queue();<br>dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 <em> NSEC_PER_SEC)), queue, ^{<br>    // 在queue里面延迟执行的一段代码<br>    …<br>});<br>｀｀｀<br><em>*应用场景</em></em><br>这为我们提供了一个简单的延迟执行的方式，比如在view加载结束延迟执行一个动画等等。</p>
+<h4 id="3-_dispatch_once"><a href="#3-_dispatch_once" class="headerlink" title="3. dispatch_once"></a>3. dispatch_once</h4><p><strong>一般用法</strong><br>｀｀｀<br>static dispatch_once_t onceToken;<br>dispatch_once(&amp;onceToken, ^{<br>    // 只执行一次的任务<br>    …<br>});<br>｀｀｀<br><strong>应用场景</strong><br>可以使用其创建一个单例，也可以做一些其他只执行一次的代码，比如做一个只能点一次的button（好像没啥用）。</p>
+<h4 id="4-_dispatch_group"><a href="#4-_dispatch_group" class="headerlink" title="4. dispatch_group"></a>4. dispatch_group</h4><p><strong>一般用法</strong><br>｀｀｀<br>dispatch_queue_t queue = dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0);<br>dispatch_group_t group = dispatch_group_create();</p>
+<p>dispatch_group_async(group, queue, ^{<br>    // 异步任务1<br>});</p>
+<p>dispatch_group_async(group, queue, ^{<br>    // 异步任务2<br>});</p>
+<p>// 等待group中多个异步任务执行完毕，做一些事情，介绍两种方式</p>
+<p>// 方式1（不好，会卡住当前线程）<br>dispatch_group_wait(group, DISPATCH_TIME_FOREVER);<br>…</p>
+<p>// 方式2（比较好）<br>dispatch_group_notify(group, mainQueue, ^{<br>    // 任务完成后，在主队列中做一些操作<br>    …<br>});<br>｀｀｀<br><strong>应用场景</strong><br>上述的一种方式，可以适用于自己维护的一些异步任务的同步问题；但是对于已经封装好的一些库，比如AFNetworking等，我们不获取其异步任务的队列，这里可以通过一种计数的方式控制任务间同步，下面为解决单界面多接口的一种方式。<br>｀｀｀<br>// 两个请求和参数为我项目里面的不用在意。</p>
+<p>// 计数＋1<br>dispatch_group_enter(group);<br>[JDApiService getActivityDetailWithActivityId:self.activityId Location:stockAddressId SuccessBlock:^(NSDictionary *userInfo) {<br>    // 数据返回后一些处理<br>    …</p>
+<pre><code>// 计数－1
+dispatch_group_leave(group);
+</code></pre><p>} FailureBlock:^(NSError *error) {<br>    // 数据返回后一些处理<br>    …</p>
+<pre><code>// 计数－1
+dispatch_group_leave(group);
+</code></pre><p>}];</p>
+<p>// 计数＋1<br>dispatch_group_enter(group);<br>[JDApiService getAllCommentWithActivityId:self.activityId pageSize:3 pageNum:self.commentCurrentPage SuccessBlock:^(NSDictionary *userInfo) {<br>    // 数据返回后一些处理<br>    …</p>
+<pre><code>// 计数－1
+dispatch_group_leave(group);
+</code></pre><p>} FailureBlock:^(NSError *error) {<br>    // 数据返回后一些处理<br>    …</p>
+<pre><code>// 计数－1
+dispatch_group_leave(group);
+</code></pre><p>}];</p>
+<p>// 其实用计数的说法可能不太对，但是就这么理解吧。会在计数为0的时候执行dispatch_group_notify的任务。<br>dispatch_group_notify(group, mainQueue, ^{<br>    // 一般为回主队列刷新UI<br>    …<br>});<br>｀｀｀</p>
+<h4 id="5-_dispatch_apply"><a href="#5-_dispatch_apply" class="headerlink" title="5. dispatch_apply"></a>5. dispatch_apply</h4><p><strong>一般用法</strong><br>｀｀｀</p>
+<p>｀｀｀<br><strong>应用场景</strong></p>
+<h4 id="6-_dispatch_suspend_u548Cdispatch_resume"><a href="#6-_dispatch_suspend_u548Cdispatch_resume" class="headerlink" title="6. dispatch_suspend和dispatch_resume"></a>6. dispatch_suspend和dispatch_resume</h4><p><strong>一般用法</strong><br>｀｀｀</p>
+<p>｀｀｀<br><strong>应用场景</strong><br>｀｀｀</p>
+<p>｀｀｀</p>
+<h4 id="7-_dispatch_semaphore_signal"><a href="#7-_dispatch_semaphore_signal" class="headerlink" title="7. dispatch_semaphore_signal"></a>7. dispatch_semaphore_signal</h4><p><strong>一般用法</strong><br>｀｀｀</p>
+<p>｀｀｀<br><strong>应用场景</strong><br>｀｀｀</p>
+<p>｀｀｀</p>
+<h4 id="8-_dispatch_set_context_u548Cdispatch_get_context"><a href="#8-_dispatch_set_context_u548Cdispatch_get_context" class="headerlink" title="8.  dispatch_set_context和dispatch_get_context"></a>8.  dispatch_set_context和dispatch_get_context</h4><p><strong>一般用法</strong><br>｀｀｀</p>
+<p>｀｀｀<br><strong>应用场景</strong></p>
+<h4 id="9-_dispatch_set_finalizer_f"><a href="#9-_dispatch_set_finalizer_f" class="headerlink" title="9. dispatch_set_finalizer_f"></a>9. dispatch_set_finalizer_f</h4><p><strong>一般用法</strong><br>｀｀｀</p>
+<p>｀｀｀<br><strong>应用场景</strong></p>
 
   </section>
 
