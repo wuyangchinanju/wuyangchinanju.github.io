@@ -26,7 +26,7 @@ Although threads have been around for ma">
 <meta property="og:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
 一、多线程背景
 Although threads have been around for ma">
-<meta property="og:updated_time" content="2016-06-20T08:32:51.000Z">
+<meta property="og:updated_time" content="2016-06-20T09:07:58.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD | 程序羊的小巫">
 <meta name="twitter:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
@@ -225,6 +225,18 @@ classes that you can use:
 <p><strong>应用场景</strong><br>其实关于dispatch_semaphore_t，并没有看到太多应用和资料解释，我只能参照自己对linux信号量的理解写了两个用法，经测试确实相似。这里，就不对一些死锁问题进行讨论了。</p>
 <h4 id="9-_dispatch_set_context_u3001dispatch_get_context_u548Cdispatch_set_finalizer_f"><a href="#9-_dispatch_set_context_u3001dispatch_get_context_u548Cdispatch_set_finalizer_f" class="headerlink" title="9.  dispatch_set_context、dispatch_get_context和dispatch_set_finalizer_f"></a>9.  dispatch_set_context、dispatch_get_context和dispatch_set_finalizer_f</h4><p><strong>一般用法</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// dispatch_set_context&#12289;dispatch_get_context&#26159;&#20026;&#20102;&#21521;&#38431;&#21015;&#20013;&#20256;&#36882;&#19978;&#19979;&#25991;context&#26381;&#21153;&#30340;&#12290;&#10;// dispatch_set_finalizer_f&#30456;&#24403;&#20110;dispatch_object_t&#30340;&#26512;&#26500;&#20989;&#25968;&#12290;&#10;// &#22240;&#20026;context&#30340;&#25968;&#25454;&#19981;&#26159;foundation&#23545;&#35937;&#65292;&#25152;&#20197;arc&#19981;&#20250;&#33258;&#21160;&#22238;&#25910;&#65292;&#19968;&#33324;&#22312;dispatch_set_finalizer_f&#20013;&#25163;&#21160;&#22238;&#25910;&#65292;&#25152;&#20197;&#19968;&#33324;&#35762;&#19978;&#36848;&#19977;&#20010;&#26041;&#27861;&#32465;&#23450;&#20351;&#29992;&#12290;&#10;&#10;- (void)test&#10;&#123;&#10;    // &#20960;&#31181;&#21019;&#24314;context&#30340;&#26041;&#24335;&#10;    // a&#12289;&#29992;C&#35821;&#35328;&#30340;malloc&#21019;&#24314;context&#25968;&#25454;&#12290;&#10;    // b&#12289;&#29992;C++&#30340;new&#21019;&#24314;&#31867;&#23545;&#35937;&#12290;&#10;    // c&#12289;&#29992;Objective-C&#30340;&#23545;&#35937;&#65292;&#20294;&#26159;&#35201;&#29992;__bridge&#31561;&#20851;&#38190;&#23383;&#36716;&#20026;Core Foundation&#23545;&#35937;&#12290;&#10;&#10;    dispatch_queue_t queue = dispatch_queue_create(&#34;queue&#34;, DISPATCH_QUEUE_CONCURRENT);&#10;    if (queue) &#123;&#10;        // &#34;123&#34;&#21363;&#20026;&#20256;&#20837;&#30340;context&#10;        dispatch_set_context(queue, &#34;123&#34;);&#10;        dispatch_set_finalizer_f(queue, &#38;xigou);&#10;    &#125;&#10;    dispatch_async(queue, ^&#123;&#10;        char *string = dispatch_get_context(queue);&#10;        NSLog(@&#34;%s&#34;, string);&#10;    &#125;);&#10;&#125;&#10;&#10;// &#35813;&#20989;&#25968;&#20250;&#22312;dispatch_object_t&#38144;&#27585;&#26102;&#35843;&#29992;&#12290;&#10;void xigou(void *context)&#10;&#123;&#10;    // &#37322;&#25918;context&#30340;&#20869;&#23384;&#65288;&#23545;&#24212;&#19978;&#36848;abc&#65289;&#10;&#10;    // a&#12289;CFRelease(context);&#10;    // b&#12289;free(context);&#10;    // c&#12289;delete context;&#10;&#125;</span><br></pre></td></tr></table></figure></p>
 <p><strong>应用场景</strong><br>dispatch_set_context可以为队列添加上下文数据，但是因为GCD是C语言接口形式的，所以其context参数类型是“void *”。需使用上述abc三种方式创建context，并且一般结合dispatch_set_finalizer_f使用，回收context内存。</p>
+<h2 id="u56DB_u3001_u5185_u5B58_u548C_u5B89_u5168"><a href="#u56DB_u3001_u5185_u5B58_u548C_u5B89_u5168" class="headerlink" title="四、内存和安全"></a>四、内存和安全</h2><p>稍微提一下吧，因为部分人纠结于dispatch的内存问题。<br><strong>内存</strong></p>
+<ul>
+<li>mrc:用dispatch_retain和dispatch_release管理dispatch_object_t内存。</li>
+<li>arc:arc在编译时刻自动管理dispatch_object_t内存，使用retain和release会报错。<br><strong>安全</strong><br>dispatch_queue是线程安全的。</li>
+</ul>
+<h2 id="u4E94_u3001_u62FE_u9057"><a href="#u4E94_u3001_u62FE_u9057" class="headerlink" title="五、拾遗"></a>五、拾遗</h2><p>这里主要提一下GCD的一些坑和线程的一些问题。</p>
+<h4 id="1-__u6B7B_u9501"><a href="#1-__u6B7B_u9501" class="headerlink" title="1. 死锁"></a>1. 死锁</h4><ul>
+<li>dispatch_sync</li>
+<li>dispatch_apply</li>
+<li>dispatch_barrier<h4 id="2-_dispatch_time_t"><a href="#2-_dispatch_time_t" class="headerlink" title="2. dispatch_time_t"></a>2. dispatch_time_t</h4></li>
+</ul>
+<h4 id="3-_GCD_u548C_u7EBF_u7A0B_u7684_u5173_u7CFB"><a href="#3-_GCD_u548C_u7EBF_u7A0B_u7684_u5173_u7CFB" class="headerlink" title="3. GCD和线程的关系"></a>3. GCD和线程的关系</h4><p>如果你是新手，GCD和线程木有关系。<br>如果你是高手，我们做朋友吧。</p>
 
   </section>
 
