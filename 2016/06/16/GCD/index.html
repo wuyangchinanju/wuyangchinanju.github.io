@@ -26,7 +26,7 @@ Although threads have been around for ma">
 <meta property="og:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
 一、多线程背景
 Although threads have been around for ma">
-<meta property="og:updated_time" content="2016-06-20T09:07:58.000Z">
+<meta property="og:updated_time" content="2016-06-20T09:34:34.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="GCD | 程序羊的小巫">
 <meta name="twitter:description" content="谈到iOS多线程，一般都会谈到四种方式：pthread、NSThread、GCD和NSOperation。其中，苹果推荐也是我们最经常使用的无疑是GCD。对于身为开发者的我们来说，并发一直都很棘手，如果对GCD的理解不够透彻，那么iOS开发的历程绝对不会顺利。这里，我会从几个角度浅谈我对GCD的理解。
@@ -227,16 +227,17 @@ classes that you can use:
 <p><strong>应用场景</strong><br>dispatch_set_context可以为队列添加上下文数据，但是因为GCD是C语言接口形式的，所以其context参数类型是“void *”。需使用上述abc三种方式创建context，并且一般结合dispatch_set_finalizer_f使用，回收context内存。</p>
 <h2 id="u56DB_u3001_u5185_u5B58_u548C_u5B89_u5168"><a href="#u56DB_u3001_u5185_u5B58_u548C_u5B89_u5168" class="headerlink" title="四、内存和安全"></a>四、内存和安全</h2><p>稍微提一下吧，因为部分人纠结于dispatch的内存问题。<br><strong>内存</strong></p>
 <ul>
-<li>mrc:用dispatch_retain和dispatch_release管理dispatch_object_t内存。</li>
-<li>arc:arc在编译时刻自动管理dispatch_object_t内存，使用retain和release会报错。<br><strong>安全</strong><br>dispatch_queue是线程安全的。</li>
+<li>MRC:用dispatch_retain和dispatch_release管理dispatch_object_t内存。</li>
+<li>ARC:ARC在编译时刻自动管理dispatch_object_t内存，使用retain和release会报错。</li>
 </ul>
+<p><strong>安全</strong><br>dispatch_queue是线程安全的，你可以随意往里面添加任务。</p>
 <h2 id="u4E94_u3001_u62FE_u9057"><a href="#u4E94_u3001_u62FE_u9057" class="headerlink" title="五、拾遗"></a>五、拾遗</h2><p>这里主要提一下GCD的一些坑和线程的一些问题。</p>
-<h4 id="1-__u6B7B_u9501"><a href="#1-__u6B7B_u9501" class="headerlink" title="1. 死锁"></a>1. 死锁</h4><ul>
-<li>dispatch_sync</li>
-<li>dispatch_apply</li>
-<li>dispatch_barrier<h4 id="2-_dispatch_time_t"><a href="#2-_dispatch_time_t" class="headerlink" title="2. dispatch_time_t"></a>2. dispatch_time_t</h4></li>
-</ul>
+<h4 id="1-__u6B7B_u9501"><a href="#1-__u6B7B_u9501" class="headerlink" title="1. 死锁"></a>1. 死锁</h4><p><strong>dispatch_sync</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#20551;&#35774;&#36825;&#27573;&#20195;&#30721;&#25191;&#34892;&#20110;&#20027;&#38431;&#21015;&#10;dispatch_queue_t serialQueue = dispatch_queue_create(&#34;serialQueue&#34;, DISPATCH_QUEUE_SERIAL);&#10;dispatch_queue_t mainQueue = dispatch_get_main_queue();&#10;&#10;// &#22312;&#20027;&#38431;&#21015;&#28155;&#21152;&#21516;&#27493;&#20219;&#21153;&#10;dispatch_sync(mainQueue, ^&#123;&#10;    // &#20219;&#21153;&#10;    ...&#10;&#125;);&#10;&#10;// &#22312;&#20018;&#34892;&#38431;&#21015;&#28155;&#21152;&#21516;&#27493;&#20219;&#21153; &#10;dispatch_sync(serialQueue, ^&#123;&#10;    // &#20219;&#21153;&#10;    ...&#10;    dispatch_sync(serialQueue, ^&#123;&#10;        // &#20219;&#21153;&#10;        ...&#10;    &#125;);&#10;&#125;;</span><br></pre></td></tr></table></figure></p>
+<p><strong>dispatch_apply</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// &#22240;&#20026;dispatch_apply&#20250;&#21345;&#20303;&#24403;&#21069;&#32447;&#31243;&#65292;&#20869;&#37096;&#30340;dispatch_apply&#20250;&#31561;&#24453;&#22806;&#37096;&#65292;&#22806;&#37096;&#30340;&#31561;&#24453;&#20869;&#37096;&#65292;&#25152;&#20197;&#27515;&#38145;&#12290;&#10;dispatch_queue_t queue = dispatch_queue_create(&#34;queue&#34;, DISPATCH_QUEUE_CONCURRENT);&#10;dispatch_apply(10, queue, ^(size_t) &#123;&#10;    // &#20219;&#21153;&#10;    ...&#10;    dispatch_apply(10, queue, ^(size_t) &#123;&#10;        // &#20219;&#21153;&#10;        ...&#10;    &#125;);&#10;&#125;);</span><br></pre></td></tr></table></figure></p>
+<p><strong>dispatch_barrier</strong><br>dispatch_barrier_sync在串行队列和全局并行队列里面和dispatch_sync同样的效果，所以需考虑同dispatch_sync一样的死锁问题。</p>
+<h4 id="2-_dispatch_time_t"><a href="#2-_dispatch_time_t" class="headerlink" title="2. dispatch_time_t"></a>2. dispatch_time_t</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">// dispatch_time_t&#19968;&#33324;&#22312;dispatch_after&#21644;dispatch_group_wait&#31561;&#26041;&#27861;&#37324;&#20316;&#20026;&#21442;&#25968;&#20351;&#29992;&#12290;&#36825;&#37324;&#26368;&#38656;&#35201;&#27880;&#24847;&#30340;&#26159;&#19968;&#20123;&#23439;&#30340;&#21547;&#20041;&#12290;&#10;// NSEC_PER_SEC&#65292;&#27599;&#31186;&#26377;&#22810;&#23569;&#32435;&#31186;&#12290;&#10;// USEC_PER_SEC&#65292;&#27599;&#31186;&#26377;&#22810;&#23569;&#27627;&#31186;&#12290;&#10;// NSEC_PER_USEC&#65292;&#27599;&#27627;&#31186;&#26377;&#22810;&#23569;&#32435;&#31186;&#12290;&#10;// DISPATCH_TIME_NOW &#20174;&#29616;&#22312;&#24320;&#22987;&#10;// DISPATCH_TIME_FOREVE &#27704;&#20037;&#10;&#10;// time&#20026;1s&#30340;&#20889;&#27861;&#10;dispatch_time_t time = dispatch_time(DISPATCH_TIME_NOW, 1 * NSEC_PER_SEC);</span><br></pre></td></tr></table></figure>
 <h4 id="3-_GCD_u548C_u7EBF_u7A0B_u7684_u5173_u7CFB"><a href="#3-_GCD_u548C_u7EBF_u7A0B_u7684_u5173_u7CFB" class="headerlink" title="3. GCD和线程的关系"></a>3. GCD和线程的关系</h4><p>如果你是新手，GCD和线程木有关系。<br>如果你是高手，我们做朋友吧。</p>
+<h2 id="u516D_u3001_u53C2_u8003_u6587_u732E"><a href="#u516D_u3001_u53C2_u8003_u6587_u732E" class="headerlink" title="六、参考文献"></a>六、参考文献</h2><p>1、<a href="https://developer.apple.com/library/mac/documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW2" target="_blank" rel="external">https://developer.apple.com/library/mac/documentation/General/Conceptual/ConcurrencyProgrammingGuide/OperationQueues/OperationQueues.html#//apple_ref/doc/uid/TP40008091-CH102-SW2</a><br>2、<a href="https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/" target="_blank" rel="external">https://developer.apple.com/library/ios/documentation/Performance/Reference/GCD_libdispatch_Ref/</a><br>3、<a href="http://tutuge.me/2015/04/03/something-about-gcd/" target="_blank" rel="external">http://tutuge.me/2015/04/03/something-about-gcd/</a><br>4、<a href="http://www.jianshu.com/p/85b75c7a6286" target="_blank" rel="external">http://www.jianshu.com/p/85b75c7a6286</a><br>5、<a href="http://www.jianshu.com/p/d56064507fb8" target="_blank" rel="external">http://www.jianshu.com/p/d56064507fb8</a></p>
 
   </section>
 
